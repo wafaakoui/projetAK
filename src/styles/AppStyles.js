@@ -1,68 +1,74 @@
 import { StyleSheet } from 'react-native';
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    padding: 20,
   },
-  title: {
-    fontSize: 32,
+  header: {
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#D32F2F',  // Rouge
-    marginBottom: 30,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#555',
+    color: '#E50914', // Rouge
     marginBottom: 20,
-  },
-  roleSelectionContainer: {
-    marginBottom: 30,
-  },
-  roleButton: {
-    backgroundColor: '#f8d7da',  // Fond léger pour les boutons
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    borderRadius: 30,
-    marginBottom: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  selectedRole: {
-    backgroundColor: '#D32F2F', // Fond rouge pour le rôle sélectionné
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#fff',  // Texte blanc
   },
   input: {
-    width: '100%',
     height: 50,
-    borderColor: '#D32F2F',
+    width: '80%',
+    borderColor: '#E50914',
     borderWidth: 1,
-    borderRadius: 25,
-    paddingHorizontal: 15,
     marginBottom: 15,
+    paddingLeft: 10,
+    borderRadius: 5,
     fontSize: 16,
+    color: '#333',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '80%',
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#E50914',
+    borderRadius: 5,
+  },
+  passwordInput: {
+    height: 50,
+    flex: 1, // Prend tout l'espace disponible
+    paddingLeft: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  eyeIcon: {
+    padding: 10,
   },
   button: {
-    backgroundColor: '#D32F2F', // Rouge pour le bouton principal
-    paddingVertical: 15,
-    width: '100%',
-    borderRadius: 25,
+    backgroundColor: '#E50914', // Rouge
+    paddingVertical: 12,
+    borderRadius: 5,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
+    width: '80%',
+    marginBottom: 10,
   },
-  linkText: {
-    color: '#D32F2F', // Lien rouge pour "Créer un compte"
-    fontSize: 16,
-    textDecorationLine: 'underline',
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  signupButton: {
+    marginTop: 20,
+    paddingVertical: 12,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: '#E50914',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    width: '80%',
+  },
+  signupButtonText: {
+    color: '#E50914',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
-
-export default styles;
