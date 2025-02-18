@@ -18,11 +18,15 @@ const Login = () => {
       if (user.role === 'Manager') {
         navigation.navigate('ManagerHome');
       } else if (user.role === 'Staff') {
-        navigation.navigate('StaffHome');
+        navigation.navigate('StaffHome', { chefId: user.id });
       }
     } else {
       Alert.alert('Erreur', 'Identifiants incorrects');
     }
+  };
+  const handleForgotPassword = () => {
+    Alert.alert('Réinitialisation du mot de passe', 'Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse e-mail.');
+    // Tu peux ici ajouter une logique pour envoyer un lien de réinitialisation par email
   };
 
   return (
@@ -59,6 +63,9 @@ const Login = () => {
 
       <TouchableOpacity style={styles.signupButton} onPress={() => navigation.navigate('Signup')}>
         <Text style={styles.signupButtonText}>Créer un compte</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleForgotPassword}>
+        <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
       </TouchableOpacity>
     </View>
   );

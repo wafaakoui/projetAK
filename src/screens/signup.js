@@ -21,6 +21,10 @@ const Signup = () => {
     Alert.alert('Succès', 'Compte créé avec succès !');
     navigation.navigate('Login'); // Redirige vers la page de connexion après l'inscription
   };
+  const handleForgotPassword = () => {
+    Alert.alert('Réinitialisation du mot de passe', 'Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse e-mail.');
+      // Tu peux ici ajouter une logique pour envoyer un lien de réinitialisation par email
+  };
 
   return (
     <View style={styles.container}>
@@ -64,6 +68,9 @@ const Signup = () => {
 
       <TouchableOpacity style={styles.signupButton} onPress={() => navigation.navigate('Login')}>
         <Text style={styles.signupButtonText}>Se connecter</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleForgotPassword}>
+        <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
       </TouchableOpacity>
     </View>
   );

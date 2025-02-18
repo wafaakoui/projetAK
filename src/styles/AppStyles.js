@@ -3,52 +3,49 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#fff',
   },
   header: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
-    color: '#E50914', // Rouge
+    textAlign: 'center',
     marginBottom: 20,
+    color: '#E73E01',  // Couleur Corail
   },
   input: {
     height: 50,
-    width: '80%',
-    borderColor: '#E50914',
-    borderWidth: 1,
-    marginBottom: 15,
+    borderColor: '#E73E01',
+    borderBottomWidth: 1,
+    marginBottom: 20,
     paddingLeft: 10,
-    borderRadius: 5,
     fontSize: 16,
     color: '#333',
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '80%',
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#E50914',
-    borderRadius: 5,
   },
   passwordInput: {
+    flex: 1,
     height: 50,
-    flex: 1, // Prend tout l'espace disponible
+    borderColor: '#E73E01',
+    borderBottomWidth: 1,
+    marginBottom: 20,
     paddingLeft: 10,
     fontSize: 16,
     color: '#333',
   },
   eyeIcon: {
-    padding: 10,
+    position: 'absolute',
+    right: 10,
   },
   button: {
-    backgroundColor: '#E50914', // Rouge
-    paddingVertical: 12,
+    backgroundColor: '#E73E01',
+    paddingVertical: 15,
     borderRadius: 5,
     alignItems: 'center',
-    width: '80%',
     marginBottom: 10,
   },
   buttonText: {
@@ -57,18 +54,18 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   signupButton: {
-    marginTop: 20,
-    paddingVertical: 12,
-    borderRadius: 5,
-    borderWidth: 2,
-    borderColor: '#E50914',
-    backgroundColor: '#fff',
+    marginTop: 10,
     alignItems: 'center',
-    width: '80%',
   },
   signupButtonText: {
-    color: '#E50914',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: '#E73E01',
+    fontSize: 16,
+  },
+  forgotPasswordText: {
+    color: '#E73E01',
+    textAlign: 'center',
+    fontSize: 14,
+    marginTop: 10,
+    textDecorationLine: 'underline',
   },
 });

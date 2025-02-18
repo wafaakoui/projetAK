@@ -16,7 +16,11 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
         <Stack.Screen name="ManagerHome" component={ManagerHome} />
-        <Stack.Screen name="StaffHome" component={StaffHome} />
+        <Stack.Screen
+          name="StaffHome"
+          component={StaffHome}
+          initialParams={{ chefName: 'Chef Pizza' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
