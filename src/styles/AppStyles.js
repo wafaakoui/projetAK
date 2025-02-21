@@ -1,6 +1,22 @@
+
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  appContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingTop: 40, // Espace en haut pour éviter la barre de statut
+    paddingHorizontal: 20, // Ajout de padding sur les côtés
+  },
+  appTitle: {
+    fontSize: 55, 
+    fontWeight: "bold",
+    color: "#E73E01", 
+    alignSelf: "flex-start", 
+    marginLeft: 10, // Décalage léger du bord gauche
+    marginBottom: 15, // Espacement sous le titre
+    fontFamily: "sans-serif-medium", 
+  },
   container: {
     flex: 1,
     padding: 20,
@@ -12,7 +28,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
-    color: '#E73E01',  // Couleur Corail
+    color: '#E73E01', 
   },
   input: {
     height: 50,

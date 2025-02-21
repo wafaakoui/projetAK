@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Modal, Button, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Modal, Button, Alert, Animated } from 'react-native';
 import { ticketsData } from '../data/data';
 import { styles } from '../styles/StaffHomeStyles';
 
 const StaffHome = ({ route }) => {
-  const { chefId } = route.params;  // Récupère l'ID du chef
+  const { chefId } = route.params;
   const [tickets, setTickets] = useState([]);
-  const [filteredStatus, setFilteredStatus] = useState('');  // Nouveau état pour le filtre de statut
-  const [selectedTicket, setSelectedTicket] = useState(null); // Ticket sélectionné pour afficher ses détails
-  const [modalVisible, setModalVisible] = useState(false); // Pour afficher le modal de détails
+  const [filteredStatus, setFilteredStatus] = useState('');
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const fadeAnim = useState(new Animated.Value(0))[0]; // Animation pour l'affichage des tickets
 
   useEffect(() => {
-    // Filtre les tickets en fonction du chef connecté et du statut sélectionné
     const chefTickets = ticketsData.filter(ticket => ticket.chefId === chefId);
     if (filteredStatus) {
       const filteredTickets = chefTickets.filter(ticket => ticket.status === filteredStatus);
@@ -19,12 +19,19 @@ const StaffHome = ({ route }) => {
     } else {
       setTickets(chefTickets);
     }
+
+    // Animation d'apparition des tickets
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
   }, [chefId, filteredStatus]);
 
   const markAsCompleted = (ticketId) => {
     const updatedTickets = tickets.map(ticket => {
       if (ticket.id === ticketId) {
-        return { ...ticket, status: 'Terminé' }; // Met à jour le statut du ticket
+        return { ...ticket, status: 'Terminé' };
       }
       return ticket;
     });
@@ -38,8 +45,9 @@ const StaffHome = ({ route }) => {
       [
         { text: 'Non', onPress: () => {} },
         { text: 'Oui', onPress: () => {
+            // Filtrer les tickets pour supprimer celui sélectionné
             const updatedTickets = tickets.filter(ticket => ticket.id !== ticketId);
-            setTickets(updatedTickets);
+            setTickets(updatedTickets);  // Mettre à jour l'état des tickets
           }
         }
       ]
@@ -47,7 +55,7 @@ const StaffHome = ({ route }) => {
   };
 
   const renderTicket = (ticket) => (
-    <View style={[styles.ticketContainer, ticket.status === 'Terminé' ? styles.completedTicket : null]}>
+    <Animated.View style={[styles.ticketContainer, ticket.status === 'Terminé' ? styles.completedTicket : null, { opacity: fadeAnim }]}>
       <Text style={styles.orderNumber}>Commande: {ticket.orderNumber}</Text>
       <Text style={styles.orderDetails}>{ticket.orderDetails}</Text>
       <Text style={styles.status}>Statut: {ticket.status}</Text>
@@ -65,10 +73,9 @@ const StaffHome = ({ route }) => {
       <TouchableOpacity onPress={() => { setSelectedTicket(ticket); setModalVisible(true); }}>
         <Text style={styles.buttonText}>Voir détails</Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 
-  // Fonction pour afficher les détails dans un modal
   const renderModal = () => {
     if (!selectedTicket) return null;
     return (
@@ -94,7 +101,6 @@ const StaffHome = ({ route }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Mes Tickets</Text>
 
-      {/* Filtrage par statut */}
       <View style={styles.filterContainer}>
         <TouchableOpacity onPress={() => setFilteredStatus('')}>
           <Text style={styles.filterButton}>Tous</Text>
@@ -114,6 +120,7 @@ const StaffHome = ({ route }) => {
         data={tickets}
         renderItem={({ item }) => renderTicket(item)}
         keyExtractor={(item) => item.id}
+        numColumns={3} // Afficher les tickets en deux colonnes
       />
 
       {renderModal()}
