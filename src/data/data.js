@@ -36,3 +36,10 @@ export const ticketsData = [
   { id: '4', orderNumber: '126', orderDetails: 'Café Espresso', status: 'En attente', chefId: '2' },
   { id: '5', orderNumber: '127', orderDetails: 'Tacos Mexicain', status: 'En préparation', chefId: '3' },
 ];
+
+export const restaurants = [
+  { username: 'admin', password: 'pass123', name: 'Le Gourmet' },
+  { username: 'chef1', password: 'pizza456', name: 'Pizza Express' },
+  { username: 'manager', password: 'burger789', name: 'Burger House' },
+];
+

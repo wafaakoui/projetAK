@@ -1,10 +1,9 @@
+// UserManagement.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Animated, StyleSheet, Alert } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';  // Pour les icônes
-import { useNavigation } from '@react-navigation/native';  // Pour la navigation
+import Sidebar from '../components/Sidebar';  // Import the Sidebar component
 
 const UserManagement = () => {
-  const navigation = useNavigation();  // Hook de navigation
   const [users, setUsers] = useState([
     { id: '1', name: 'Alice', role: 'Manager', password: 'password123' },
     { id: '2', name: 'Bob', role: 'Staff', password: 'password456' },
@@ -17,7 +16,7 @@ const UserManagement = () => {
 
   const [fadeAnim] = useState(new Animated.Value(0)); // Animation for fading in
 
-  // Show the animation
+  // Show the animation when the component mounts
   React.useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -25,6 +24,13 @@ const UserManagement = () => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
+
+  // Sidebar options with no text, only icons
+  const sidebarOptions = [
+    { icon: 'users', screen: 'UserManagement' },
+    { icon: 'tasks', screen: 'CategoryAssignment' },
+    { icon: 'utensils', screen: 'MenuManagement' },
+  ];
 
   // Add or update user
   const handleAddOrUpdateUser = () => {
@@ -75,35 +81,10 @@ const UserManagement = () => {
     </View>
   );
 
-  // Sidebar options with no text, only icons
-  const sidebarOptions = [
-    { icon: 'users', screen: 'UserManagement' },
-    { icon: 'tasks', screen: 'CategoryAssignment' },
-    { icon: 'utensils', screen: 'MenuManagement' },
-  ];
-
-  // Handle sidebar item click
-  const handleSidebarClick = (screen) => {
-    navigation.navigate(screen);  // Navigate to the selected screen
-  };
-
   return (
     <View style={styles.container}>
-      {/* Sidebar */}
-      <View style={styles.sidebar}>
-        <FlatList
-          data={sidebarOptions}
-          renderItem={({ item }) => (
-            <TouchableOpacity 
-              style={styles.sidebarItem} 
-              onPress={() => handleSidebarClick(item.screen)}
-            >
-              <FontAwesome5 name={item.icon} size={20} color="#fff" />
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.screen}
-        />
-      </View>
+      {/* Sidebar Component */}
+      <Sidebar options={sidebarOptions} />
 
       {/* Main Content */}
       <View style={styles.content}>
@@ -129,7 +110,6 @@ const UserManagement = () => {
           value={newUserRole}
           onChangeText={setNewUserRole}
         />
-        
 
         <TouchableOpacity style={styles.addButton} onPress={handleAddOrUpdateUser}>
           <Text style={styles.buttonText}>{editingUser ? 'Modifier' : 'Ajouter'} un utilisateur</Text>
@@ -148,19 +128,6 @@ const UserManagement = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-  },
-  sidebar: {
-    width: 80,
-    backgroundColor: '#333',
-    paddingTop: 20,
-    paddingLeft: 10,
-    flexShrink: 0,
-  },
-  sidebarItem: {
-    marginBottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
   },
   content: {
     flex: 1,

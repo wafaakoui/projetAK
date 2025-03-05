@@ -1,71 +1,82 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { users } from '../data/data';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { styles } from '../styles/AppStyles';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { users } from '../data/data'; // Importation des utilisateurs depuis data.js
 
 const Login = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const restaurantName = route.params?.restaurantName || ''; // Nom du restaurant transmis depuis RestaurantAuth
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
-    const user = users.find(user => user.email === email && user.password === password);
+  // Charger le dernier utilisateur enregistré
+  useEffect(() => {
+    const loadUserData = async () => {
+      const savedUser = await AsyncStorage.getItem('lastUsername');
+      if (savedUser) setEmail(savedUser);
+    };
+    loadUserData();
+  }, []);
+
+  // Vérification des identifiants utilisateur
+  const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    // Chercher l'utilisateur avec l'email et le mot de passe
+    const user = users.find(
+      (usr) => usr.email === email && usr.password === password
+    );
 
     if (user) {
+      await AsyncStorage.setItem('lastUsername', email); // Sauvegarde du dernier utilisateur connecté
+      Alert.alert('Succès', `Bienvenue, ${user.name} (${user.role}) au restaurant ${restaurantName}`);
+      
+      // Naviguer en fonction du rôle
       if (user.role === 'Manager') {
-        navigation.navigate('ManagerHome');
+        navigation.replace('ManagerHome');
       } else if (user.role === 'Staff') {
-        navigation.navigate('StaffHome', { chefId: user.id });
+        navigation.replace('StaffHome', { chefId: user.id });
       }
     } else {
-      Alert.alert('Erreur', 'Identifiants incorrects');
+      Alert.alert('Erreur', 'Identifiants incorrects.');
     }
-  };
-  const handleForgotPassword = () => {
-    Alert.alert('Réinitialisation du mot de passe', 'Un lien pour réinitialiser votre mot de passe a été envoyé à votre adresse e-mail.');
-    // Tu peux ici ajouter une logique pour envoyer un lien de réinitialisation par email
+
+    setIsLoading(false);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Connexion</Text>
+      <Text style={styles.title}>Connexion</Text>
+      <Text style={styles.subtitle}>Restaurant: {restaurantName}</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Adresse mail"
+        placeholder="Email"
         value={email}
         onChangeText={setEmail}
-        keyboardType="email-address"
         autoCapitalize="none"
-        placeholderTextColor="#aaa"
+        keyboardType="email-address"
       />
 
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.passwordInput}
-          placeholder="Mot de passe"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!showPassword}
-          placeholderTextColor="#aaa"
-        />
-        <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
-          <Icon name={showPassword ? 'eye-slash' : 'eye'} size={20} color="#E50914" />
-        </TouchableOpacity>
-      </View>
+      <TextInput
+        style={styles.input}
+        placeholder="Mot de passe"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Se connecter</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.signupButton} onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.signupButtonText}>Créer un compte</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleForgotPassword}>
-        <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
+        {isLoading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Se connecter</Text>}
       </TouchableOpacity>
     </View>
   );

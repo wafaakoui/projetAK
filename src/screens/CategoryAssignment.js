@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, TextInput, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, TextInput, Alert, Animated } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import Sidebar from '../components/Sidebar';  // Adjust the import path according to your folder structure
 
 const CategoryAssignment = () => {
   const navigation = useNavigation();
   const [stations, setStations] = useState(['Station 1', 'Station 2']);
   const [newStationName, setNewStationName] = useState('');
   const [isAddingStation, setIsAddingStation] = useState(false);
+
+  // Create an animated value
+  const fadeAnim = useState(new Animated.Value(0))[0]; // Initial value is 0 (invisible)
+
+  // Fade-in animation for the header title
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1, // Fade to full opacity
+      duration: 1000, // Duration of the animation
+      useNativeDriver: true, // Use native driver for better performance
+    }).start();
+  }, [fadeAnim]);
 
   // Add a station
   const addStation = () => {
@@ -44,28 +57,16 @@ const CategoryAssignment = () => {
     { icon: 'utensils', screen: 'MenuManagement' },
   ];
 
-  const handleTaskClick = (screen) => {
-    navigation.navigate(screen);
-  };
-
   return (
     <View style={styles.container}>
-      <View style={styles.sidebar}>
-        <ScrollView style={styles.sidebarContainer}>
-          {options.map((option, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.sidebarItem}
-              onPress={() => handleTaskClick(option.screen)}
-            >
-              <FontAwesome5 name={option.icon} size={30} color="#fff" />
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
+      {/* Sidebar Component */}
+      <Sidebar options={options} />
 
       <View style={styles.content}>
-        <Text style={styles.header}>Assignation des Catégories</Text>
+        {/* Animated header */}
+        <Animated.View style={{ opacity: fadeAnim }}>
+          <Text style={styles.header}>Assignation des Catégories</Text>
+        </Animated.View>
 
         <ScrollView style={styles.stationsList}>
           {stations.map((station, index) => (
@@ -119,23 +120,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#fff',
-  },
-  sidebar: {
-    width: 70,
-    backgroundColor: '#333',
-    paddingTop: 20,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    height: '100%',
-  },
-  sidebarContainer: {
-    flex: 1,
-    width: '100%',
-  },
-  sidebarItem: {
-    paddingVertical: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   content: {
     flex: 1,

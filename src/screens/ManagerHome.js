@@ -1,8 +1,9 @@
+// ManagerHome.js
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native'; // Import the navigation hook
-import ManagerHomeStyle from '../styles/ManagerHomeStyle'; // Importing style file
+import { View, Text, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import ManagerHomeStyle from '../styles/ManagerHomeStyle';
+import Sidebar from '../components/Sidebar'; // Import Sidebar component
 
 const ManagerHome = () => {
   const navigation = useNavigation();
@@ -22,19 +23,8 @@ const ManagerHome = () => {
 
   return (
     <View style={ManagerHomeStyle.container}>
-      <View style={ManagerHomeStyle.sidebar}>
-        <ScrollView style={ManagerHomeStyle.sidebarContainer}>
-          {options.map((option, index) => (
-            <TouchableOpacity
-              key={index}
-              style={ManagerHomeStyle.sidebarItem}
-              onPress={() => handleTaskClick(option.screen)}
-            >
-              <FontAwesome5 name={option.icon} size={20} color="#fff" />
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
+      {/* Sidebar Component */}
+      <Sidebar options={options} />
 
       <View style={ManagerHomeStyle.content}>
         {selectedTask ? (
