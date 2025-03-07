@@ -1,54 +1,83 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, TextInput, Alert, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, TextInput, Alert, Animated, Modal } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import Sidebar from '../components/Sidebar';  // Adjust the import path according to your folder structure
+import Sidebar from '../components/Sidebar'; // Vérifie le bon chemin
 
 const CategoryAssignment = () => {
   const navigation = useNavigation();
   const [stations, setStations] = useState(['Station 1', 'Station 2']);
   const [newStationName, setNewStationName] = useState('');
   const [isAddingStation, setIsAddingStation] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [selectedStation, setSelectedStation] = useState('');
+  const [editedName, setEditedName] = useState('');
 
-  // Create an animated value
-  const fadeAnim = useState(new Animated.Value(0))[0]; // Initial value is 0 (invisible)
+  // Animation du titre
+  const fadeAnim = useState(new Animated.Value(0))[0];
 
-  // Fade-in animation for the header title
   useEffect(() => {
     Animated.timing(fadeAnim, {
-      toValue: 1, // Fade to full opacity
-      duration: 1000, // Duration of the animation
-      useNativeDriver: true, // Use native driver for better performance
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
 
-  // Add a station
+  // Ajouter une station
   const addStation = () => {
-    if (!newStationName) {
-      Alert.alert("Erreur", "Veuillez entrer un nom pour la station.");
+    if (!newStationName.trim()) {
+      Alert.alert("Erreur", "Veuillez entrer un nom valide pour la station.");
       return;
     }
-    setStations([...stations, newStationName]);
+    setStations([...stations, newStationName.trim()]);
     setNewStationName('');
     setIsAddingStation(false);
   };
 
-  // Remove a station
+  // Supprimer une station avec confirmation
   const removeStation = (station) => {
-    setStations(stations.filter((item) => item !== station));
-  };
-
-  // Pause a station
-  const pauseStation = (station) => {
-    alert(`Station ${station} is now paused.`);
-  };
-
-  // Update station name
-  const updateStation = (oldStation, newName) => {
-    const updatedStations = stations.map((station) =>
-      station === oldStation ? newName : station
+    Alert.alert(
+      "Confirmation",
+      `Voulez-vous vraiment supprimer "${station}" ?`,
+      [
+        { text: "Annuler", style: "cancel" },
+        {
+          text: "Supprimer",
+          style: "destructive",
+          onPress: () => {
+            setStations((prevStations) => prevStations.filter((item) => item !== station));
+            Alert.alert("Succès", `"${station}" a été supprimée.`);
+          },
+        },
+      ]
     );
-    setStations(updatedStations);
+  };
+
+  // Mettre en pause une station
+  const pauseStation = (station) => {
+    Alert.alert(
+      "Mise en Pause",
+      `"${station}" a été mise en pause.`,
+      [{ text: "OK" }]
+    );
+  };
+
+  // Ouvrir le modal de modification
+  const openEditModal = (station) => {
+    setSelectedStation(station);
+    setEditedName(station);
+    setEditModalVisible(true);
+  };
+
+  // Modifier une station
+  const updateStation = () => {
+    if (!editedName.trim()) {
+      Alert.alert("Erreur", "Le nom de la station ne peut pas être vide.");
+      return;
+    }
+    setStations(stations.map((station) => (station === selectedStation ? editedName.trim() : station)));
+    setEditModalVisible(false);
   };
 
   const options = [
@@ -59,11 +88,9 @@ const CategoryAssignment = () => {
 
   return (
     <View style={styles.container}>
-      {/* Sidebar Component */}
       <Sidebar options={options} />
 
       <View style={styles.content}>
-        {/* Animated header */}
         <Animated.View style={{ opacity: fadeAnim }}>
           <Text style={styles.header}>Assignation des Catégories</Text>
         </Animated.View>
@@ -79,10 +106,7 @@ const CategoryAssignment = () => {
                 <TouchableOpacity onPress={() => removeStation(station)} style={styles.button}>
                   <FontAwesome5 name="trash" size={20} color="red" />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
-                  const newName = prompt('Enter new name for the station', station);
-                  if (newName) updateStation(station, newName);
-                }} style={styles.button}>
+                <TouchableOpacity onPress={() => openEditModal(station)} style={styles.button}>
                   <FontAwesome5 name="edit" size={20} color="blue" />
                 </TouchableOpacity>
               </View>
@@ -110,82 +134,52 @@ const CategoryAssignment = () => {
             <Text style={styles.addButtonText}>Ajouter une station</Text>
           </TouchableOpacity>
         )}
+
+        {/* Modal pour modifier une station */}
+        <Modal visible={editModalVisible} transparent animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Modifier la station</Text>
+              <TextInput
+                style={styles.input}
+                value={editedName}
+                onChangeText={setEditedName}
+              />
+              <TouchableOpacity onPress={updateStation} style={styles.updateButton}>
+                <Text style={styles.addButtonText}>Enregistrer</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setEditModalVisible(false)} style={styles.cancelButton}>
+                <Text style={styles.cancelButtonText}>Annuler</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#E73E01',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  stationsList: {
-    marginBottom: 20,
-  },
-  stationItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  stationText: {
-    fontSize: 18,
-    color: '#333',
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  button: {
-    marginHorizontal: 10,
-  },
-  addButton: {
-    backgroundColor: '#E73E01',
-    paddingVertical: 12,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  addButtonText: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  addStationContainer: {
-    marginVertical: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    marginBottom: 15,
-    paddingLeft: 10,
-    borderRadius: 5,
-  },
-  cancelButton: {
-    backgroundColor: '#bbb',
-    paddingVertical: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    fontSize: 16,
-    color: '#fff',
-  },
+  container: { flex: 1, flexDirection: 'row', backgroundColor: '#fff' },
+  content: { flex: 1, padding: 20 },
+  header: { fontSize: 24, fontWeight: 'bold', color: '#E73E01', textAlign: 'center', marginBottom: 20 },
+  stationsList: { marginBottom: 20 },
+  stationItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#ddd' },
+  stationText: { fontSize: 18, color: '#333' },
+  buttonsContainer: { flexDirection: 'row', alignItems: 'center' },
+  button: { marginHorizontal: 10 },
+  addButton: { backgroundColor: '#E73E01', paddingVertical: 12, borderRadius: 5, alignItems: 'center' },
+  addButtonText: { fontSize: 16, color: '#fff', fontWeight: 'bold' },
+  addStationContainer: { marginVertical: 20 },
+  input: { height: 40, borderColor: '#ddd', borderWidth: 1, marginBottom: 15, paddingLeft: 10, borderRadius: 5 },
+  cancelButton: { backgroundColor: '#bbb', paddingVertical: 10, borderRadius: 5, alignItems: 'center' },
+  cancelButtonText: { fontSize: 16, color: '#fff' },
+
+  /* Modal Style */
+  modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
+  modalContent: { backgroundColor: '#fff', padding: 20, borderRadius: 10, width: '80%', alignItems: 'center' },
+  modalTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
+  updateButton: { backgroundColor: '#4CAF50', paddingVertical: 12, borderRadius: 5, alignItems: 'center', width: '100%' },
 });
 
 export default CategoryAssignment;

@@ -1,21 +1,20 @@
-
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: 40, // Espace en haut pour éviter la barre de statut
-    paddingHorizontal: 20, // Ajout de padding sur les côtés
+    paddingTop: 40,
+    paddingHorizontal: 20,
   },
   appTitle: {
-    fontSize: 55, 
+    fontSize: 55,
     fontWeight: "bold",
-    color: "#E73E01", 
-    alignSelf: "flex-start", 
-    marginLeft: 10, // Décalage léger du bord gauche
-    marginBottom: 15, // Espacement sous le titre
-    fontFamily: "sans-serif-medium", 
+    color: "#E73E01",
+    alignSelf: "flex-start",
+    marginLeft: 10,
+    marginBottom: 15,
+    fontFamily: "sans-serif-medium",
   },
   container: {
     flex: 1,
@@ -23,13 +22,27 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
   },
-  header: {
+
+  // Titre de la page de connexion
+  loginTitle: {
     fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#000",
+    textAlign: "center",
     marginBottom: 20,
-    color: '#E73E01', 
+    fontFamily: "sans-serif-medium",
   },
+
+  // Sous-titre du restaurant
+  restaurantSubtitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 20,
+    fontFamily: "sans-serif-medium",
+  },
+
   input: {
     height: 50,
     borderColor: '#E73E01',
@@ -38,6 +51,7 @@ export const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 16,
     color: '#333',
+    width: '100%',
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -52,10 +66,12 @@ export const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 16,
     color: '#333',
+    width: '100%', // Champ de mot de passe avec largeur identique à l'email
   },
   eyeIcon: {
     position: 'absolute',
     right: 10,
+    
   },
   button: {
     backgroundColor: '#E73E01',
@@ -69,19 +85,24 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  signupButton: {
-    marginTop: 10,
-    alignItems: 'center',
-  },
-  signupButtonText: {
-    color: '#E73E01',
-    fontSize: 16,
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 5,
   },
   forgotPasswordText: {
-    color: '#E73E01',
+    fontSize: 16,
+    color: '#E73E01',  // Couleur rouge comme ton thème
     textAlign: 'center',
-    fontSize: 14,
     marginTop: 10,
-    textDecorationLine: 'underline',
+    fontFamily: 'sans-serif-medium',
+    textDecorationLine: 'underline',  // Pour donner l'aspect d'un lien
   },
+  eyeIcon: {
+    position: 'absolute',
+    right: 10,
+    bottom: 15,
+    padding: 5,
+  },
+
 });
